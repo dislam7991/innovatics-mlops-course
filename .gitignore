@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.ipynb_checkpoints/
+mlruns/
+mlartifacts/
+.pytest_cache/
+.ruff_cache/
+.DS_Store
+~$*
+.env
