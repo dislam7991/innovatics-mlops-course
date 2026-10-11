@@ -1,13 +1,122 @@
-# Diamond Price Prediction
+# Diamond Price Prediction: Week 2 starter
 
-Week 0 starter for the InnovatiCS MLOps Specialization Bootcamp. This folder
-contains the original working notebook and its full dataset. Each later module
-adds one production practice to the same project.
+This starter provides the package, config, Makefile, pinned environment, hooks,
+and CI. Three blocks remain unfinished: `train.train()`, `evaluate.evaluate()`,
+and `test_clean_removes_duplicates_without_changing_input()`.
+
+Each block has one `TODO M02` comment and raises `NotImplementedError`. Fill
+those blocks before running the full training commands below. `make install`
+and `make lint` work immediately. Before you finish, `make test` has one
+intentional TODO failure, 10 passes, and two artifact skips. Training fails
+before saving a model. The existing config guards must stay in place.
 
 Use Ubuntu in WSL2 on Windows, or a Linux/macOS terminal. Open this folder in
 VS Code through Remote-WSL on Windows. Run the commands below inside Linux.
 
-## Install the notebook environment
+## Install and run the reproducible project (Week 2)
+
+Install Python 3.12 and GNU Make in your Linux environment first. From the course
+repository, run:
+
+```bash
+cd diamond-mlops
+make install
+make train
+make evaluate
+make test
+make lint
+```
+
+`make install` creates `.venv`, installs the hash-locked dependencies, then installs
+this package in editable mode without downloading extra dependencies or build
+tools. `pyproject.toml` declares exact direct pins and requires Python 3.12;
+`requirements.txt` locks the notebook, package, development tools, and their
+dependencies for Linux and macOS. Keep both files when you clone or export.
+
+`make train` fits on the training rows, saves `models/diamond_pipeline.joblib`,
+then evaluates the holdout and writes `models/metrics.json`. `make evaluate`
+scores the saved pipeline again. It also trains a linear baseline on the same
+training split and reports MAE on holdout diamonds above 10,000 USD with the
+number of rows in that group. Those are context measurements; Week 9 adds
+the release quality gate.
+
+With the committed data and `params.yaml`, expect HistGradientBoosting, seed 42,
+10,755 holdout rows, MAE `279.29262903257705`, RMSE `524.9243546483148`, and R2
+`0.982563973914643`. A floating-point difference below `1e-9` is acceptable.
+Show that two runs are repeatable:
+
+```bash
+make train
+cp models/metrics.json /tmp/diamond-metrics-first.json
+make train
+cmp /tmp/diamond-metrics-first.json models/metrics.json
+```
+
+`cmp` prints nothing and returns zero when the files match. Models and metrics
+are generated outputs ignored by Git. A fresh clone's fast `make test` skips
+two artifact checks until you train. After training, those checks also verify
+the saved model name, hyperparameters, seed, and metrics against config. The
+tests do not require a model to exceed a quality threshold.
+
+The package layout separates responsibilities:
+
+| File | Responsibility |
+|---|---|
+| `params.yaml` | Seed, split fraction, model choice and hyperparameters |
+| `src/diamond/config.py` | Fixed feature schema, paths, config loading |
+| `src/diamond/data.py` | Read the local CSV |
+| `src/diamond/preprocess.py` | Clean rows, encode quality order, scale, split |
+| `src/diamond/train.py` | Build, fit, save the chosen model |
+| `src/diamond/evaluate.py` | Score the holdout and linear baseline |
+| `src/diamond/predict.py` | Load the saved pipeline and predict a record |
+| `tests/test_config_matches_code.py` | Detect config, code and artifact drift |
+
+Change experiments in `params.yaml`, then train and evaluate again. Config is
+required; a missing config fails rather than silently using defaults. The
+preprocessor is fitted only on training data. The holdout is recreated from
+the same cleaned data, split fraction and seed, so keep them unchanged between
+training and evaluation. Week 3 adds validation and data versioning.
+
+To predict one record from the shell:
+
+```bash
+.venv/bin/python -m diamond.predict '{"carat":0.23,"cut":"Ideal","color":"E","clarity":"SI2","depth":61.5,"table":55.0,"x":3.95,"y":3.98,"z":2.43}'
+```
+
+The JSON output contains `prediction` in USD. This is a local helper; the HTTP
+service comes in Week 6. Load only model files you trained or trust: joblib
+deserialization can execute Python code.
+
+## Code checks and Git hooks
+
+From `diamond-mlops/`, run:
+
+```bash
+make format
+make lint
+make test
+make hooks
+```
+
+Ruff checks code/imports, Black formats it, and pytest checks behavior. Hooks
+use the same locked `.venv` executables as Make, so they do not download another
+tool environment. `make hooks` installs the hooks into this Git checkout;
+installation is an explicit local step, not a side effect of `make install`.
+If a hook edits a file, inspect and stage the fix before committing again.
+
+From the parent course repo, check all tracked files once:
+
+```bash
+diamond-mlops/.venv/bin/pre-commit run --all-files --config diamond-mlops/.pre-commit-config.yaml
+```
+
+The config's paths target this course repository layout. A future standalone
+student export must adjust the hook paths and workflow working directory.
+`.github/workflows/checks.yml` runs install, lint and fast tests on pushes and
+pull requests with a pinned Python version and immutable action commits. CI
+does not train on every push yet; Week 9 adds that pipeline.
+
+## Open the original notebook
 
 From the course repository, enter `diamond-mlops/`:
 
@@ -82,10 +191,9 @@ PASS/FAIL result to check whether the notebook succeeded.
 
 ## Course references and provenance
 
-The reviewer publishes solution tag `m00` and starting branch `start-m00` after
-this item merges. Both references contain this starter; Week 0 has no code
-exercise stubs. Later `start-mXX` branches include that week's TODO files.
-Do not publish references to an unreviewed solution commit.
+This revised starter is `start-m02-v2`, built from solution tag `m02`
+(`e057569aad5f616359ceb33ac140b0ba1dab4e17`) with three targeted TODOs.
+The original `start-m02` branch is at `84b7c2d`. Python 3.11 tags are kept as `archive/`.
 
 Notebook and CSV copied from the course's read-only
 `sources/diamond-mlops-reference/`. Notebook cell source is preserved; saved
@@ -98,3 +206,13 @@ API references checked for this implementation:
 [Docker run](https://docs.docker.com/reference/cli/docker/container/run/),
 [nbclient](https://nbclient.readthedocs.io/en/latest/client.html), and
 [uv dependency compilation](https://docs.astral.sh/uv/pip/compile/).
+
+Week 2 adapts the course's own `sources/diamond-mlops-reference/src/diamond/`,
+`params.yaml`, and tests. The model, quality order and split match the notebook.
+Extra tests cover duplicate cleaning, input preservation, quality order,
+unknown categories, deterministic/disjoint splits, and invalid configuration.
+Official [scikit-learn 1.7.2](https://scikit-learn.org/1.7/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html),
+[Ruff](https://docs.astral.sh/ruff/configuration/),
+[pre-commit](https://pre-commit.com/), and
+[GitHub Python CI](https://docs.github.com/en/actions/tutorials/build-and-test-code/python)
+documentation were checked for this stage.

@@ -5,3 +5,8 @@ __pycache__/
 .ipynb_checkpoints/
 notebooks/executed/
 models/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/

@@ -1,4 +1,4 @@
-# Course notebook only. Later modules add their own tools.
+# Notebook plus M02 package and code-quality tools. Compile for Python 3.12.
 numpy==2.4.6
 pandas==3.0.6
 scipy==1.17.1
@@ -10,3 +10,11 @@ jupyterlab==4.6.4
 nbconvert==7.17.1
 nbclient==0.11.0
 ipykernel==7.4.0
+pyyaml==6.0.3
+pytest==9.1.1
+black==26.5.1
+ruff==0.16.5
+pre-commit==4.6.2
+pre-commit-hooks==6.0.0
+setuptools==84.0.0
+pip==26.2.1

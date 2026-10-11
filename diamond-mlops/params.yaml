@@ -1,0 +1,23 @@
+# Central experiment configuration. The notebook hardcoded these; the project
+# externalizes them so runs are reproducible, diffable, and DVC-trackable.
+#
+# Everything the code needs to reproduce models/metrics.json lives in this file.
+# Change a value here, rerun `make train && make evaluate`, and the diff in
+# metrics.json is the experiment result.
+seed: 42
+test_size: 0.2
+
+model:
+  # Must be a key in diamond.train.candidate_models(). This value is what the
+  # code actually trains -- there is no hardcoded model name anywhere in src/.
+  name: HistGradientBoosting
+
+  # Winning configuration from the notebook's RandomizedSearchCV
+  # (notebooks/01_diamond_exploration.ipynb, section 6). These keys are passed
+  # straight through as estimator kwargs, so they must match the estimator's
+  # own API -- HistGradientBoosting takes max_iter, not n_estimators.
+  # Module 4 wires this same block into MLflow as the logged param set.
+  params:
+    max_iter: 400
+    learning_rate: 0.05
+    max_depth: null      # null = unlimited depth (sklearn's None)

@@ -1,0 +1,25 @@
+# Local hooks use the exact hash-locked environment installed by make install.
+# pre-commit invokes hooks from the Git root, above diamond-mlops in this repo.
+repos:
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff (locked environment)
+        entry: diamond-mlops/.venv/bin/ruff check --fix
+        language: system
+        files: ^diamond-mlops/(src|tests)/.*\.py$
+      - id: black
+        name: black (locked environment)
+        entry: diamond-mlops/.venv/bin/black
+        language: system
+        files: ^diamond-mlops/(src|tests)/.*\.py$
+      - id: end-of-file-fixer
+        name: end-of-file-fixer (locked environment)
+        entry: diamond-mlops/.venv/bin/end-of-file-fixer
+        language: system
+        files: ^diamond-mlops/(src|tests)/.*\.py$
+      - id: check-yaml
+        name: check-yaml (locked environment)
+        entry: diamond-mlops/.venv/bin/check-yaml
+        language: system
+        files: ^(diamond-mlops/.*|\.github/workflows/.*)\.ya?ml$

@@ -1,0 +1,43 @@
+[project]
+name = "diamond-mlops"
+version = "0.2.0"
+description = "Reproducible diamond price prediction for the InnovatiCS bootcamp"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy==2.4.6",
+    "pandas==3.0.6",
+    "scipy==1.17.1",
+    "scikit-learn==1.7.2",
+    "joblib==1.6.0",
+    "pyyaml==6.0.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "black==26.5.1",
+    "ruff==0.16.5",
+    "pre-commit==4.6.2",
+    "pre-commit-hooks==6.0.0",
+]
+
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
