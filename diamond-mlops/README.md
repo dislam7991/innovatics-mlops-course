@@ -73,6 +73,13 @@ The local notebook kernel may print `Kernel is running over TCP without
 encryption`. This warning is expected during verification; use the final
 PASS/FAIL result to check whether the notebook succeeded.
 
+## Project docs
+
+- `docs/problem-framing.md`: who uses the prediction, the targets (metric,
+  latency, cost), production risks, and the maturity level today (Week 1).
+- `docs/lifecycle.md`: the project's ML lifecycle diagram and how each stage
+  maps to a course week (Week 1).
+
 ## Course references and provenance
 
 The reviewer publishes solution tag `m00` and starting branch `start-m00` after
