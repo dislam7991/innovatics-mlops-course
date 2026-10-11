@@ -1,13 +1,13 @@
 # InnovatiCS MLOps Specialization Bootcamp: course repository
 
-This is the student repository for the bootcamp *From Notebooks to Production*. It holds the weekly materials and the starter code of the one project you build all course long: **Diamond Price Prediction**. Your instructor adds a week when it is ready. This branch holds the materials up to Week 00. Later weeks are on their own `start-mXX` branches.
+This is the student repository for the bootcamp *From Notebooks to Production*. It holds the weekly materials and the starter code of the one project you build all course long: **Diamond Price Prediction**. Your instructor adds a week when it is ready. This branch holds the materials up to Week 01. Later weeks are on their own `start-mXX` branches.
 
 ## What is here
 
 | Folder or file | What it holds |
 |---|---|
 | `diamond-mlops/` | The diamond project, at the starter state of the current week. Every practical works in this folder |
-| `weeks/w00/` to `weeks/w00/` | One folder per week: `practical.md` (what you do and hand in), `content.md` (the reading), `quiz.md` (the questions), the slides as a PDF, and the images the texts use |
+| `weeks/w00/` to `weeks/w01/` | One folder per week: `practical.md` (what you do and hand in), `content.md` (the reading), `quiz.md` (the questions), the slides as a PDF, and the images the texts use |
 | `capstone/` | The capstone brief, the rubric and the two checkpoint briefs. Handed out in Week 1 |
 | `.github/workflows/` | The GitHub Actions checks the practicals use. They run in your fork for free, because your fork is public |
 
